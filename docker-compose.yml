@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: tripmate-postgres
+    environment:
+      POSTGRES_DB: tripmate
+      POSTGRES_USER: tripmate
+      # 로컬 개발 전용 비밀번호입니다. 실제 운영(AWS RDS)에서는
+      # 절대 코드에 박지 말고 .env / Secrets Manager에서 주입하세요.
+      POSTGRES_PASSWORD: tripmate1234
+    ports:
+      - "5432:5432"
+    volumes:
+      # DB 데이터가 컨테이너를 지워도 유지되도록 볼륨에 저장
+      - tripmate-pgdata:/var/lib/postgresql/data
+      # 이 폴더의 .sql 파일은 "DB가 처음 생성될 때 딱 한 번" 자동 실행됩니다
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tripmate -d tripmate"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  tripmate-pgdata:
