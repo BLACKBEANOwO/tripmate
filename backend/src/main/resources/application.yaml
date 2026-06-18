@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    # 환경변수가 있으면 그 값을, 없으면 콜론 뒤 기본값(로컬 개발용)을 사용합니다.
+    # → AWS 배포 시 코드 수정 없이 환경변수/Secrets만 주입하면 됩니다 (Phase 7).
+    url: jdbc:postgresql://localhost:5432/${DB_NAME:tripmate}
+    username: ${DB_USERNAME:tripmate}
+    password: ${DB_PASSWORD:tripmate1234}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # 테이블은 db/init/01-schema.sql 로 이미 만들었으므로 JPA가 손대지 않게 함.
+      # validate = 엔티티와 실제 테이블이 일치하는지 "검증만" (자동 생성/수정 X).
+      ddl-auto: validate
+    show-sql: true            # 실행되는 SQL을 콘솔에 출력 (학습용)
+    properties:
+      hibernate:
+        format_sql: true      # SQL 보기 좋게 들여쓰기
+    open-in-view: false       # 권장 설정 (지연 로딩 관련 안티패턴 방지)
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info  # /actuator/health 노출 (나중에 prometheus 추가)

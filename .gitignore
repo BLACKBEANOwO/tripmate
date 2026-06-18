@@ -22,3 +22,6 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Gradle Wrapper jar는 *.jar에 걸리지만 반드시 커밋되어야 함
+!gradle-wrapper.jar
