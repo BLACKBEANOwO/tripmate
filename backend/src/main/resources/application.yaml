@@ -18,8 +18,18 @@ spring:
         format_sql: true      # SQL 보기 좋게 들여쓰기
     open-in-view: false       # 권장 설정 (지연 로딩 관련 안티패턴 방지)
 
+jwt:
+  # 로컬 개발용 기본값. 프로덕션에서는 반드시 환경변수로 주입할 것.
+  # 최소 256bit(32바이트) 이상이어야 HS256 서명 가능.
+  secret: ${JWT_SECRET:tripmate-dev-secret-key-must-be-at-least-32-bytes!!}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}  # 24시간
+
 server:
   port: 8080
+  error:
+    # ResponseStatusException 등에 담은 사용자용 메시지를 응답 본문에 포함.
+    # 기본값은 never(보안상 숨김)지만, 우리가 의도적으로 던진 메시지는 노출이 맞다.
+    include-message: always
 
 management:
   endpoints:
